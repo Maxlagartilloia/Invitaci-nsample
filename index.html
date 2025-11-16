@@ -74,7 +74,7 @@
         .animate-zoomIn.delay-0.2s { animation-delay: 0.2s; }
         .animate-zoomIn.delay-0.4s { animation-delay: 0.4s; }
         .animate-zoomIn.delay-0.6s { animation-delay: 0.6s; }
-        
+
         /* Aspect Ratio for iframe */
         .aspect-w-16 {
             position: relative;
@@ -116,6 +116,148 @@
         const EVENT_DATE_STRING = EVENT_DATE.toLocaleDateString('es-ES', { 
             year: 'numeric', month: 'long', day: 'numeric' 
         });
+
+        // --- Componente de Formulario RSVP Personalizado ---
+        // ESTO ES UNA SIMULACIÓN. En una aplicación real, se usaría Firebase para guardar los datos.
+        const RSVPForm = () => {
+            const [name, setName] = useState('');
+            const [attendance, setAttendance] = useState('yes'); // 'yes', 'no'
+            const [teamSize, setTeamSize] = useState(1); // Número de asistentes
+            const [isSubmitted, setIsSubmitted] = useState(false);
+            const [isLoading, setIsLoading] = useState(false);
+
+            // Genera opciones del 1 al 10 para el tamaño del equipo
+            const teamSizeOptions = Array.from({ length: 10 }, (_, i) => i + 1);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!name || (attendance === 'yes' && teamSize < 1)) return; 
+
+                setIsLoading(true);
+
+                // Simulación de envío de datos
+                setTimeout(() => {
+                    console.log(`RSVP Recibido (Simulación): Nombre: ${name}, Asistencia: ${attendance}, Tamaño del Equipo: ${attendance === 'yes' ? teamSize : 0}`);
+                    setIsLoading(false);
+                    setIsSubmitted(true);
+                }, 1500); // 1.5 segundos para simular carga
+            };
+
+            // Vista de Confirmación Exitosa
+            if (isSubmitted) {
+                const teamMessage = attendance === 'yes' 
+                    ? `¡El registro de ${teamSize} ${teamSize === 1 ? 'jugador está' : 'jugadores están'} listo!`
+                    : 'Lamentamos tu ausencia. ¡Aún así te enviamos un abrazo!';
+
+                return (
+                    <div className="text-center p-8 bg-gray-900 rounded-xl border-4 border-green-500 shadow-lg animate-fadeIn">
+                        <i className="fas fa-check-circle text-6xl text-green-400 neon-text-secondary mb-4 animate-bounceIn"></i>
+                        <h4 className="text-2xl font-bold text-white neon-text">¡Confirmación Enviada!</h4>
+                        <p className="text-gray-300 mt-2 text-xl">
+                            ¡Gracias, <span className="font-semibold text-lime-300">{name}</span>!
+                        </p>
+                        <p className="text-gray-300 mt-1 text-lg">{teamMessage}</p>
+                    </div>
+                );
+            }
+
+            // Vista del Formulario
+            return (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label htmlFor="name" className="block text-xl font-semibold text-lime-400 neon-text-secondary">
+                            Nombre Completo (Capitán del Equipo / Familia)
+                        </label>
+                        <input
+                            id="name"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            placeholder="Escribe tu nombre o el de tu familia"
+                            className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400 transition-colors duration-300"
+                        />
+                    </div>
+                    
+                    <div className="space-y-3">
+                        <p className="text-xl font-semibold text-lime-400 neon-text-secondary mb-2">
+                            ¿Estarás en la cancha para el pitazo inicial?
+                        </p>
+                        <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-6">
+                            <label className="flex items-center cursor-pointer text-gray-300 hover:text-cyan-300 transition-colors duration-300">
+                                <input
+                                    type="radio"
+                                    name="attendance"
+                                    value="yes"
+                                    checked={attendance === 'yes'}
+                                    onChange={() => setAttendance('yes')}
+                                    className="w-5 h-5 text-green-500 bg-gray-700 border-gray-500 focus:ring-green-500 mr-2"
+                                />
+                                Sí, ¡asistiremos! (Equipo Completo)
+                            </label>
+                            <label className="flex items-center cursor-pointer text-gray-300 hover:text-red-400 transition-colors duration-300">
+                                <input
+                                    type="radio"
+                                    name="attendance"
+                                    value="no"
+                                    checked={attendance === 'no'}
+                                    onChange={() => setAttendance('no')}
+                                    className="w-5 h-5 text-red-500 bg-gray-700 border-gray-500 focus:ring-red-500 mr-2"
+                                />
+                                No podré asistir (Tarjeta Roja)
+                            </label>
+                        </div>
+                    </div>
+
+                    {/* Campo para el tamaño del equipo, visible solo si confirman asistencia */}
+                    {attendance === 'yes' && (
+                        <div className="space-y-2 pt-2 animate-fadeIn">
+                            <label htmlFor="teamSize" className="block text-xl font-semibold text-lime-400 neon-text-secondary">
+                                ¿Cuántos jugadores/acompañantes van? (Incluyéndote)
+                            </label>
+                            <div className="relative">
+                                <select
+                                    id="teamSize"
+                                    value={teamSize}
+                                    onChange={(e) => setTeamSize(Number(e.target.value))}
+                                    className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:ring-blue-500 focus:border-blue-500 text-white appearance-none transition-colors duration-300"
+                                >
+                                    {teamSizeOptions.map(num => (
+                                        <option key={num} value={num}>
+                                            {num} {num === 1 ? 'Persona' : 'Personas'}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                                    <i className="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <button
+                        type="submit"
+                        disabled={!name || isLoading || (attendance === 'yes' && teamSize < 1)}
+                        className={`w-full py-3 text-xl font-bold rounded-lg shadow-md transition-all duration-300 flex items-center justify-center ${
+                            (!name || isLoading || (attendance === 'yes' && teamSize < 1))
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-gradient-to-r from-blue-600 to-green-600 text-white hover:from-blue-700 hover:to-green-700 neon-text-secondary'
+                        }`}
+                    >
+                        {isLoading ? (
+                            <>
+                                <i className="fas fa-sync-alt fa-spin mr-2"></i> Enviando...
+                            </>
+                        ) : (
+                            <>
+                                Enviar Confirmación <i className="fas fa-paper-plane ml-2"></i>
+                            </>
+                        )}
+                    </button>
+                </form>
+            );
+        };
+        // Fin del Componente de Formulario RSVP Personalizado
 
         // Main App Component
         const App = () => {
@@ -328,7 +470,7 @@
                             alt={`Placeholder para: ${photo.text}`}
                             className="w-full h-48 object-cover rounded-lg"
                             loading="lazy" 
-                            onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x300/1a202c/a0aec0?text=Error+Carga'; }}
+                            onerror="this.onerror=null; this.src='https://placehold.co/400x300/1a202c/a0aec0?text=Error+Carga';"
                           />
                         </div>
                       ))}
@@ -358,15 +500,16 @@
                     </p>
                   </section>
 
-                  {/* Music Playlist Section (Se mantiene el contenido original) */}
+                  {/* Music Playlist Section (Canción Ella Baila Sola) */}
                   <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-lime-700 animate-slideInUp">
                     <h3 className="text-3xl md:text-4xl font-semibold text-lime-400 mb-6 neon-text-secondary">
-                      Música de la Celebración (¡Para la Hinchada!)
+                      Música para la Celebración
                     </h3>
                     <div className="aspect-w-16 aspect-h-9 w-full rounded-lg overflow-hidden shadow-xl">
+                      {/* Enlace de Spotify para Ella Baila Sola */}
                       <iframe
                         style={{ borderRadius: '12px' }}
-                        src="https://open.spotify.com/embed/track/7D0RhFcb3CrfPuTJ0obrod?utm_source=generator&theme=0&autoplay=1"
+                        src="https://open.spotify.com/embed/track/0W8nDs4H2cqxxAgszNMYO3?utm_source=generator&theme=0&autoplay=1"
                         width="100%"
                         height="352"
                         frameBorder="0"
@@ -377,11 +520,11 @@
                       ></iframe>
                     </div>
                     <p className="text-center text-gray-400 text-sm mt-6">
-                      ¡Prepárate para bailar!
+                      ¡Una de las favoritas del capitán para ponerle ambiente a la fiesta!
                     </p>
                   </section>
           
-                  {/* RSVP Section - Google Form Embed (Se mantiene el contenido original) */}
+                  {/* RSVP Section - AHORA USA EL COMPONENTE CUSTOM (RSVPForm) */}
                   <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-blue-700 animate-slideInUp">
                     <h3 className="text-3xl md:text-4xl font-semibold text-blue-400 mb-6 neon-text">
                       Confirma tu Asistencia (RSVP)
@@ -389,22 +532,12 @@
                     <p className="text-lg text-gray-300 mb-6">
                       ¡Necesitamos saber cuántos jugadores tendremos! Por favor, confirma tu asistencia antes del <span className="font-semibold text-lime-300">20 de noviembre del 2025</span>.
                     </p>
-                    <div className="w-full max-w-full overflow-hidden rounded-lg shadow-lg" style={{backgroundColor: '#1a202c'}}> 
-                      <iframe
-                        src="https://docs.google.com/forms/d/e/1FAIpQLSd9NlyAz8PZffB1SAozcF-35tODMd0-cMv0pcRyXBUcfmkHcQ/viewform?embedded=true"
-                        width="100%"
-                        height="1052"
-                        frameBorder="0"
-                        marginHeight="0"
-                        marginWidth="0"
-                        className="rounded-lg"
-                        style={{backgroundColor: 'transparent'}}
-                      >
-                        Cargando…
-                      </iframe>
-                    </div>
+                    
+                    {/* Componente de Formulario Integrado */}
+                    <RSVPForm />
+                    
                     <p className="text-center text-gray-400 text-sm mt-6">
-                      Para cualquier duda, por favor contáctanos.
+                      Para cualquier duda o cambio de último momento, por favor contáctanos.
                     </p>
                   </section>
                     
