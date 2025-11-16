@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="https://placehold.co/32x32/000000/FFFFFF?text=FUT" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Invitación interactiva para la fiesta de cumpleaños número 8 de Pepito." />
+    <meta property="og:title" content="¡Estás Invitado! El Partido del Año - 8 Años de Pepito" />
+    <meta property="og:description" content="El crack del fútbol, Pepito, celebra sus 8 años. ¡Únete al equipo para el fiestón!" />
+    <meta property="og:image" content="https://placehold.co/1200x630/000000/FFFFFF?text=Fiesta+Pepito+Futbol" />
+    <meta property="og:url" content="https://your-invitation-url.netlify.app" /> 
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>¡El Partido del Año! - Pepito 8 Años</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons (incluye íconos de fútbol) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Custom CSS for neon effects and animations -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Colores de Neón: Azul Eléctrico y Verde Césped */
+        .neon-text {
+            text-shadow: 0 0 2px #3b82f6, 0 0 4px #3b82f6, 0 0 8px #3b82f6; 
+        }
+
+        .neon-text-large {
+            text-shadow: 0 0 3px #3b82f6, 0 0 6px #3b82f6, 0 0 9px #3b82f6, 0 0 15px #3b82f6; 
+        }
+        
+        /* Neón Verde Césped para los nombres/detalles */
+        .neon-text-secondary {
+            text-shadow: 0 0 1px #84cc16, 0 0 2px #84cc16, 0 0 4px #84cc16, 0 0 8px #84cc16; 
+        }
+
+        .neon-number {
+            text-shadow: 0 0 2px #34d399, 0 0 4px #34d399, 0 0 6px #34d399; /* Verde-Aqua */
+        }
+
+        /* Animaciones (Se mantienen las anteriores) */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fadeIn { animation: fadeIn 1.5s ease-out forwards; }
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 2px #3b82f6, 0 0 4px #3b82f6, 0 0 8px #3b82f6; }
+            50% { text-shadow: 0 0 4px #3b82f6, 0 0 8px #3b82f6, 0 0 16px #3b82f6, 0 0 24px #3b82f6; }
+        }
+        .animate-glow { animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slideUp { animation: slideUp 1s ease-out forwards; }
+        .animate-slideUp.delay-05s { animation-delay: 0.5s; }
+        .animate-slideUp.delay-1s { animation-delay: 1s; }
+        @keyframes bounceIn { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.1); opacity: 1; } 70% { transform: scale(0.9); } 100% { transform: scale(1); } }
+        .animate-bounceIn { animation: bounceIn 1s ease-out forwards; }
+        @keyframes slideInDown { from { transform: translateY(-100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slideInDown { animation: slideInDown 1s ease-out forwards; }
+        @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-slideInLeft { animation: slideInLeft 1s ease-out forwards; }
+        @keyframes slideInRight { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .animate-slideInRight { animation: slideInRight 1s ease-out forwards; }
+        @keyframes slideInUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slideInUp { animation: slideInUp 1s ease-out forwards; }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-zoomIn { animation: zoomIn 0.8s ease-out forwards; }
+        .animate-zoomIn.delay-0.2s { animation-delay: 0.2s; }
+        .animate-zoomIn.delay-0.4s { animation-delay: 0.4s; }
+        .animate-zoomIn.delay-0.6s { animation-delay: 0.6s; }
+        
+        /* Aspect Ratio for iframe */
+        .aspect-w-16 {
+            position: relative;
+            width: 100%;
+        }
+        .aspect-w-16::before {
+            content: '';
+            display: block;
+            padding-top: calc(var(--aspect-h, 9) / var(--aspect-w, 16) * 100%);
+        }
+        .aspect-w-16 > :first-child {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+        .aspect-h-9 {
+            --aspect-h: 9;
+        }
+    </style>
+</head>
+<body>
+    <noscript>Necesitas habilitar JavaScript para ver esta invitación.</noscript>
+    <div id="root"></div>
+
+    <!-- React and ReactDOM CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Configuración Global ---
+        // Fecha y hora del evento: 30 de Noviembre de 2025, 7 PM (19:00)
+        const EVENT_DATE = new Date('2025-11-30T19:00:00'); 
+        const EVENT_DATE_STRING = EVENT_DATE.toLocaleDateString('es-ES', { 
+            year: 'numeric', month: 'long', day: 'numeric' 
+        });
+
+        // Main App Component
+        const App = () => {
+          const [showWelcome, setShowWelcome] = useState(true);
+          const [countdown, setCountdown] = useState({
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+          });
+
+          useEffect(() => {
+            // Función para calcular la cuenta regresiva
+            const calculateCountdown = () => {
+              const now = new Date();
+              const targetTime = EVENT_DATE.getTime();
+              const currentTime = now.getTime();
+
+              const timeDifference = targetTime - currentTime;
+
+              if (timeDifference <= 0) {
+                setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+                return;
+              }
+
+              const seconds = Math.floor((timeDifference / 1000) % 60);
+              const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+              const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
+              const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+              // Asegura que todos tengan dos dígitos, excepto los días.
+              setCountdown({ 
+                  days: days, 
+                  hours: String(hours).padStart(2, '0'), 
+                  minutes: String(minutes).padStart(2, '0'), 
+                  seconds: String(seconds).padStart(2, '0') 
+              });
+            };
+
+            // Actualizar cuenta regresiva cada segundo
+            const interval = setInterval(calculateCountdown, 1000);
+
+            // Cálculo inicial
+            calculateCountdown();
+
+            // Limpiar intervalo
+            return () => clearInterval(interval);
+          }, []);
+
+          const handleEnterClick = () => {
+            setShowWelcome(false);
+          };
+
+          // Array de placeholders temáticos de fútbol para la galería (6 fotos)
+          const placeholderPhotos = [
+            { id: 1, text: "Golpe de Gloria", color: "84cc16" },   // Verde
+            { id: 2, text: "Campo de Juego", color: "3b82f6" },   // Azul
+            { id: 3, text: "Celebración", color: "fbbf24" },      // Amarillo
+            { id: 4, text: "Pastel Crack", color: "f43f5e" },     // Rojo
+            { id: 5, text: "Amigos", color: "a855f7" },           // Violeta
+            { id: 6, text: "Regalos Campeones", color: "34d399" } // Verde Aqua
+          ];
+
+          return (
+            <div className="min-h-screen bg-gray-950 text-white font-inter antialiased flex flex-col items-center justify-center overflow-x-hidden">
+              
+              {/* === Welcome Screen (Temática Fútbol) === */}
+              {showWelcome ? (
+                <div className="welcome-screen flex flex-col items-center justify-center text-center p-6 bg-gray-950 w-full h-screen animate-fadeIn">
+                    
+                    {/* Título Principal con Glow */}
+                    <h1 className="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-600 mb-6 neon-text-large animate-slideInDown">
+                        <i className="fas fa-futbol text-4xl md:text-6xl mr-3"></i> ¡El Partido del Año! 
+                    </h1>
+
+                    {/* Subtítulo Temático Neón */}
+                    <p className="text-3xl md:text-5xl font-semibold text-lime-400 mb-8 neon-text-secondary animate-slideInLeft delay-05s">
+                        8 Años de Pepito, el Crack
+                    </p>
+
+                    {/* Mensaje Chévere y Atractivo */}
+                    <p className="text-xl md:text-3xl font-light text-white leading-relaxed max-w-4xl px-4 animate-slideInRight delay-1s neon-text text-center">
+                        Nuestro delantero estrella está cumpliendo 8 años y vamos a celebrar con un campeonato de fiesta. <br/>
+                        <span className="font-bold text-cyan-300 mt-2 block">
+                            ¡Prepárense para compartir juntos una tarde llena de goles, retos y, por supuesto, mucho pastel!
+                        </span>
+                    </p>
+                    
+                    {/* Botón de Entrada con Animación */}
+                    <button
+                        onClick={handleEnterClick}
+                        className="mt-16 px-12 py-5 bg-gradient-to-r from-lime-600 to-blue-700 text-white text-2xl font-bold rounded-full shadow-2xl shadow-lime-500/50 hover:shadow-blue-500/50 transition-all duration-500 transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-lime-500/70 animate-bounceIn"
+                    >
+                        PATEAR PARA INGRESAR <i className="fas fa-chevron-right ml-2"></i>
+                    </button>
+                </div>
+              ) : (
+                // === Main Invitation Content ===
+                <div className="main-invitation w-full max-w-5xl mx-auto p-6 md:p-10 lg:p-12 animate-fadeIn delay-1s">
+                  {/* Header Section */}
+                  <header className="text-center mb-16 mt-8">
+                    <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-green-600 mb-4 neon-text-large animate-slideInDown">
+                       <i className="fas fa-star text-3xl mr-2"></i> 8 Años de Campeonato <i className="fas fa-trophy text-3xl ml-2"></i>
+                    </h1>
+                    {/* Nombre del Niño con Estilo Neón Verde */}
+                    <h2 className="text-4xl md:text-5xl font-bold text-blue-400 mb-2 neon-text animate-slideInLeft">
+                        Pepito
+                    </h2>
+                    <p className="text-2xl md:text-3xl text-blue-400 neon-text animate-slideInRight">
+                      ¡Nuestro Crack Favorito!
+                    </p>
+                    <p className="text-xl md:text-2xl text-gray-400 mt-4 animate-fadeIn delay-1s">
+                      Fecha de Inicio del Partido: {EVENT_DATE_STRING}
+                    </p>
+                  </header>
+
+                  {/* Countdown Section - Configurado para el 30 de Noviembre de 2025 */}
+                  <section className="mb-16 text-center">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-green-400 mb-8 neon-text-secondary animate-slideInUp">
+                      Falta para el Silbato Inicial
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      <div className="countdown-item bg-gray-800 p-6 rounded-xl shadow-xl border border-green-600 animate-zoomIn">
+                        <p className="text-5xl md:text-6xl font-bold text-cyan-300 neon-number">{countdown.days}</p>
+                        <p className="text-lg md:text-xl text-gray-400 mt-2">Días</p>
+                      </div>
+                      <div className="countdown-item bg-gray-800 p-6 rounded-xl shadow-xl border border-blue-600 animate-zoomIn delay-0.2s">
+                        <p className="text-5xl md:text-6xl font-bold text-cyan-300 neon-number">{countdown.hours}</p>
+                        <p className="text-lg md:text-xl text-gray-400 mt-2">Horas</p>
+                      </div>
+                      <div className="countdown-item bg-gray-800 p-6 rounded-xl shadow-xl border border-green-600 animate-zoomIn delay-0.4s">
+                        <p className="text-5xl md:text-6xl font-bold text-cyan-300 neon-number">{countdown.minutes}</p>
+                        <p className="text-lg md:text-xl text-gray-400 mt-2">Minutos</p>
+                      </div>
+                      <div className="countdown-item bg-gray-800 p-6 rounded-xl shadow-xl border border-blue-600 animate-zoomIn delay-0.6s">
+                        <p className="text-5xl md:text-6xl font-bold text-cyan-300 neon-number">{countdown.seconds}</p>
+                        <p className="text-lg md:text-xl text-gray-400 mt-2">Segundos</p>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Event Details Section */}
+                  <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-blue-700 animate-slideInLeft">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-blue-400 mb-6 neon-text">
+                      Estadio del Evento
+                    </h3>
+                    <div className="space-y-6 text-gray-300 text-lg">
+                      <p className="flex items-center">
+                        <i className="fas fa-map-marker-alt text-lime-400 mr-3 text-2xl"></i>
+                        <span className="font-semibold text-xl">Lugar:</span> Gran Salón Central (¡Campo de Juego!)
+                      </p>
+                      <p className="flex items-center">
+                        <i className="fas fa-clock text-lime-400 mr-3 text-2xl"></i>
+                        <span className="font-semibold text-xl">Hora:</span> Pitazo inicial a las 19:00 horas
+                      </p>
+                      <div className="flex items-start">
+                        <i className="fas fa-directions text-lime-400 mr-3 text-2xl mt-1"></i>
+                        <div>
+                          <span className="font-semibold text-xl block">Dirección:</span>
+                          <p>
+                            Calle Principal S/N, Ciudad de la Alegría
+                          </p>
+                          <a
+                            href="https://www.google.com/maps/search/?api=1&query=Gran+Salón+Central+para+Eventos"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-green-500 hover:underline mt-2 inline-block transition-colors duration-300 hover:text-green-400"
+                          >
+                            Ver Ruta al Estadio <i className="fas fa-external-link-alt ml-1 text-sm"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Dress Code Section */}
+                  <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-lime-700 animate-slideInRight">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-lime-400 mb-6 neon-text-secondary">
+                      Uniforme del Equipo
+                    </h3>
+                    <p className="text-xl text-gray-300">
+                      Te invitamos a vestir <span className="font-bold text-cyan-300">Casual y Cómodo</span>. ¡Vístete con los colores de tu equipo favorito si quieres entrar en el espíritu de la cancha!
+                    </p>
+                  </section>
+
+                  {/* Gift Suggestions Section */}
+                  <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-lime-700 animate-slideInLeft">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-lime-400 mb-6 neon-text-secondary">
+                      Trofeos para el Campeón
+                    </h3>
+                    <p className="text-xl text-gray-300">
+                      Tu presencia es nuestra medalla de oro. Si deseas sorprender a Pepito, cualquier detalle que le ayude a seguir siendo un **crack del fútbol** será perfecto.
+                    </p>
+                  </section>
+
+                  {/* Photo Gallery Section - Placeholders de Fútbol */}
+                  <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-blue-700 animate-slideInRight">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-blue-400 mb-6 neon-text">
+                      Momentos de la Liga (Galería)
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {placeholderPhotos.map((photo, index) => (
+                        <div 
+                          key={index} 
+                          className="rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 flex items-center justify-center p-2 border-4 border-dashed"
+                          style={{ borderColor: `#${photo.color}` }}
+                        >
+                          <img
+                            src={`https://placehold.co/400x300/${photo.color}/ffffff?text=${photo.text.replace(/ /g, '+')}`} 
+                            alt={`Placeholder para: ${photo.text}`}
+                            className="w-full h-48 object-cover rounded-lg"
+                            loading="lazy" 
+                            onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x300/1a202c/a0aec0?text=Error+Carga'; }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-center text-gray-400 text-sm mt-6">
+                      ¡Las fotos del partido estarán aquí pronto!
+                    </p>
+                  </section>
+
+                  {/* Personalized Message Section (Mensaje adaptado al cumpleañero) */}
+                  <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-blue-700 animate-slideInLeft">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-blue-400 mb-6 neon-text">
+                      ¡El Mensaje del Capitán!
+                    </h3>
+                    <p className="text-xl text-gray-300 leading-relaxed italic">
+                      ¡Hola a todos! Soy Pepito y estoy SÚPER emocionado de cumplir 8 años. Quiero celebrar este gran día con todos mis amigos y familia que son mi equipo.
+                      <br/>
+                      <span className="font-bold text-lime-400 mt-2 block">
+                        Vengan con toda la energía, listos para jugar, reír, y demostrar que somos los mejores en la cancha de la diversión. ¡Los espero para el pitazo inicial!
+                      </span>
+                      <br /><br />
+                      Con mucho cariño,
+                    </p>
+                    <p className="text-right text-gray-400 mt-4 text-lg font-semibold">
+                      Pepito, el Crack <br />
+                      (y sus orgullosos padres)
+                    </p>
+                  </section>
+
+                  {/* Music Playlist Section (Se mantiene el contenido original) */}
+                  <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-lime-700 animate-slideInUp">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-lime-400 mb-6 neon-text-secondary">
+                      Música de la Celebración (¡Para la Hinchada!)
+                    </h3>
+                    <div className="aspect-w-16 aspect-h-9 w-full rounded-lg overflow-hidden shadow-xl">
+                      <iframe
+                        style={{ borderRadius: '12px' }}
+                        src="https://open.spotify.com/embed/track/7D0RhFcb3CrfPuTJ0obrod?utm_source=generator&theme=0&autoplay=1"
+                        width="100%"
+                        height="352"
+                        frameBorder="0"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        allowFullScreen
+                        loading="lazy"
+                        className="rounded-lg"
+                      ></iframe>
+                    </div>
+                    <p className="text-center text-gray-400 text-sm mt-6">
+                      ¡Prepárate para bailar!
+                    </p>
+                  </section>
+          
+                  {/* RSVP Section - Google Form Embed (Se mantiene el contenido original) */}
+                  <section className="mb-16 bg-gray-800 p-8 rounded-xl shadow-xl border border-blue-700 animate-slideInUp">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-blue-400 mb-6 neon-text">
+                      Confirma tu Asistencia (RSVP)
+                    </h3>
+                    <p className="text-lg text-gray-300 mb-6">
+                      ¡Necesitamos saber cuántos jugadores tendremos! Por favor, confirma tu asistencia antes del <span className="font-semibold text-lime-300">20 de noviembre del 2025</span>.
+                    </p>
+                    <div className="w-full max-w-full overflow-hidden rounded-lg shadow-lg" style={{backgroundColor: '#1a202c'}}> 
+                      <iframe
+                        src="https://docs.google.com/forms/d/e/1FAIpQLSd9NlyAz8PZffB1SAozcF-35tODMd0-cMv0pcRyXBUcfmkHcQ/viewform?embedded=true"
+                        width="100%"
+                        height="1052"
+                        frameBorder="0"
+                        marginHeight="0"
+                        marginWidth="0"
+                        className="rounded-lg"
+                        style={{backgroundColor: 'transparent'}}
+                      >
+                        Cargando…
+                      </iframe>
+                    </div>
+                    <p className="text-center text-gray-400 text-sm mt-6">
+                      Para cualquier duda, por favor contáctanos.
+                    </p>
+                  </section>
+                    
+                  {/* Footer */}
+                  <footer className="text-center text-gray-500 text-sm mt-16">
+                    <p>&copy; 2025 El Partido del Año de Pepito. ¡A Jugar!</p>
+                  </footer>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
+
